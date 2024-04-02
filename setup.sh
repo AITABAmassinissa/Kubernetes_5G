@@ -1,6 +1,6 @@
 #"""""""""""""""""""""""""""""""""""""""""""""" install docker """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # Update package lists
-yes | sudo apt-get update
+sudo apt-get update
 
 # Install necessary packages
 sudo apt-get install ca-certificates curl
@@ -9,20 +9,21 @@ sudo apt-get install ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
 
 # Download Docker GPG key and add it to apt keyring
-sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
+
 
 # Add Docker repository to apt sources list
 echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 # Update package lists again
-yes | sudo apt-get update
+sudo apt-get update
 
 # Install Docker packages
-yes | sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 
 # Configure containerd
@@ -105,7 +106,13 @@ sudo snap install cmake --classic
 # Aller dans le dossier cloné
 cd RAN/UERANSIM
 make
-
+cd .. 
+cd ..
+#"""""""""""""""""""""""""""""""""""""""""""""" install Helm """""""""""""""""""""""""""""""""""""""""""""""""""""
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+helm plugin install https://github.com/ThalesGroup/helm-spray
 #""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # Clone multus GitHub repository
 git clone https://github.com/k8snetworkplumbingwg/multus-cni.git
