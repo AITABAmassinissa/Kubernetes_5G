@@ -1,0 +1,11 @@
+ERROR: ld.so: object './libdevbnd.so' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.
+Connecting to host 10.244.0.74, port 5210
+[  5] local 10.244.0.1 port 55940 connected to 10.244.0.74 port 5210
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec   778 MBytes  6.52 Gbits/sec   14   7.79 MBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-1.00   sec   778 MBytes  6.52 Gbits/sec   14             sender
+[  5]   0.00-1.01   sec   777 MBytes  6.45 Gbits/sec                  receiver
+
+iperf Done.

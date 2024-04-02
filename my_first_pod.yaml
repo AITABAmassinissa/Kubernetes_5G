@@ -1,0 +1,48 @@
+# Spécification de l'API utilisée pour définir cette ressource Kubernetes # Exemple : apiVersion: apps/v1
+#Which Kubernetes apiVersion Should I Use? : https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-apiversion-definition-guide.html
+apiVersion: v1  
+# Type de la ressource Kubernetes, dans ce cas-ci, un Pod # Exemple : kind: Deployment
+kind: Pod  
+# Métadonnées associées au Pod, comprenant notamment son nom
+metadata:
+  name: python-pod 
+# Spécification du contenu du Pod, incluant les conteneurs et les volumes
+spec:
+  # Liste des conteneurs à exécuter dans ce Pod
+  containers:
+  - name: python-container1
+    # Image Docker à utiliser pour ce conteneur
+    image: maitaba/python_container:sleep 
+    # Politique de tirage de l'image, commentée pour conserver la valeur par défaut (Always)
+    #imagePullPolicy: Never
+    resources:
+      limits:
+        memory: 600Mi
+        cpu: 1
+      requests:
+        memory: 400Mi
+        cpu: 200m
+    # Configuration de montage de volume pour ce conteneur
+    volumeMounts:
+    - name: shared-volume
+      mountPath: /data
+  - name: python-container2
+    # Image Docker à utiliser pour ce conteneur
+    image: maitaba/python_container:sleep  
+    resources:
+      limits:
+        memory: 500Mi
+        cpu: 2
+      requests:
+        memory: 300Mi
+        cpu: 400m
+    #imagePullPolicy: Never
+    # Configuration de montage de volume pour ce conteneur
+    volumeMounts:
+    - name: shared-volume
+      mountPath: /data
+  # Définition des volumes à utiliser dans ce Pod
+  volumes:
+  - name: shared-volume
+    # Volume de type emptyDir, #Le volume sera créé au démarrage du Pod et il existera tant que le Pod est en cours d'exécution.
+    emptyDir: {}
