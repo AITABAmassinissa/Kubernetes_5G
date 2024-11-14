@@ -8,7 +8,7 @@ COPY second_container.py /app/
 WORKDIR /app
 
 # Execution du script Python
-CMD ["python", "-u", "second_container.py.py"] 
+CMD ["python", "-u", "second_container.py"] 
 
 #Ajoutez l'option -u lorsque vous executez le script Python. Cela desactive le buffering pour la sortie standard, ce qui permet d'afficher immediatement les print dans les logs.
 

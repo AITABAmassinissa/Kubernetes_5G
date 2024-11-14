@@ -1,4 +1,5 @@
 import os
+from time import sleep
 
 # Chemin du fichier de compteur dans le volume monté
 file_path = "/data/counter.txt"
@@ -23,3 +24,5 @@ try:
     print("Le compteur mis à jour a été enregistré dans le fichier.")
 except IOError:
     print("Erreur : Impossible d'écrire dans /data, le volume n'est peut-être pas monté.")
+
+sleep(10000)

@@ -1,4 +1,4 @@
-"""import numpy as np
+import numpy as np
 from time import sleep
 # Creation d'un tableau numpy
 arr = np.array([1, 2, 3, 4, 5])
@@ -13,7 +13,7 @@ print("Version de numpy:", np.__version__)
 #ajoutez votre touche, exemple : print("...")
 #
 
-#sleep(10000)
+sleep(10000)
 
 """
 
@@ -40,3 +40,4 @@ with open(file_path, "w") as file:
     file.write(str(counter))
 
 print("Le compteur mis à jour a été enregistré dans le fichier.")
+"""
