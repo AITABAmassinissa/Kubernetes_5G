@@ -1,0 +1,2 @@
+docker build -t volume_container .
+kind load docker-image volume_container:latest --name k8s-playground

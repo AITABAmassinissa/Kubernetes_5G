@@ -6,6 +6,7 @@ kind: Pod
 # Métadonnées associées au Pod, comprenant notamment son nom
 metadata:
   name: python-pod 
+  namespace: tp
 # Spécification du contenu du Pod, incluant les conteneurs et les volumes
 spec:
   # Liste des conteneurs à exécuter dans ce Pod

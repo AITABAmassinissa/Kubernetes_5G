@@ -1,22 +1,3 @@
-"""import numpy as np
-from time import sleep
-# Creation d'un tableau numpy
-arr = np.array([1, 2, 3, 4, 5])
-
-# Affichage du tableau
-print("Tableau numpy:", arr)
-
-# Affichage de la version de numpy
-print("Version de numpy:", np.__version__)
-
-#
-#ajoutez votre touche, exemple : print("...")
-#
-
-#sleep(10000)
-
-"""
-
 import os
 
 # Chemin du fichier de compteur dans le volume monté
@@ -36,7 +17,9 @@ counter += 1
 print(f"Incrémentation du compteur : {counter}")
 
 # Écriture de la nouvelle valeur du compteur dans le fichier (persistance)
-with open(file_path, "w") as file:
-    file.write(str(counter))
-
-print("Le compteur mis à jour a été enregistré dans le fichier.")
+try:
+    with open(file_path, "w") as file:
+        file.write(str(counter))
+    print("Le compteur mis à jour a été enregistré dans le fichier.")
+except IOError:
+    print("Erreur : Impossible d'écrire dans /data, le volume n'est peut-être pas monté.")

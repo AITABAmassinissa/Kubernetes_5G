@@ -1,46 +1,9 @@
-#"""""""""""""""""""""""""""""""""""""""""""""" install docker """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-# Update package lists
-sudo apt-get update
-
-# Install necessary packages
-sudo apt-get install ca-certificates curl
-
-# Create directory for apt keyrings
-sudo install -m 0755 -d /etc/apt/keyrings
-
-# Download Docker GPG key and add it to apt keyring
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-
-# Add Docker repository to apt sources list
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-# Update package lists again
-sudo apt-get update
-
-# Install Docker packages
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-
-# Configure containerd
-sudo su <<EOF
-cat > /etc/containerd/config.toml <<EOFF
-[plugins."io.containerd.grpc.v1.cri"]
-  systemd_cgroup = true
-EOFF
-systemctl restart containerd
-exit
-EOF
-#"""""""""""""""""""""""""""""""""""""""""""""" install Kubernetes """"""""""""""""""""""""""""""""""""""""""""""""""""""
+#"""""""""""""""""""""""""""""""""""""""""""""" install docker et K8s""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # Create directory for Kubernetes apt keyring
 sudo mkdir /etc/apt/keyrings
 
 # Update package lists
-yes | sudo apt-get update
+sudo apt-get update
 
 # Install necessary packages for Kubernetes
 sudo apt-get install -y apt-transport-https ca-certificates curl gpg
@@ -52,13 +15,70 @@ curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 # Update package lists again
-yes |sudo apt-get update
+sudo apt-get update
 
 # Install Kubernetes packages
 sudo apt-get install -y kubelet kubeadm kubectl
 
 # Hold Kubernetes packages to prevent accidental upgrades
 sudo apt-mark hold kubelet kubeadm kubectl
+
+# Enable IP forwarding
+# sudo sysctl net.ipv4.conf.all.forwarding=1
+
+# Accept forwarding rules
+# sudo iptables -P FORWARD ACCEPT
+
+# Disable swap
+sudo swapoff -a
+
+
+
+# Update package lists
+sudo apt-get update
+
+# Install necessary packages
+sudo apt-get install ca-certificates curl
+
+# Create directory for apt keyrings
+sudo install -m 0755 -d /etc/apt/keyrings
+
+# Download Docker GPG key and add it to apt keyring
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add Docker repository to apt sources list
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Update package lists again
+sudo apt-get update
+
+# Install Docker packages
+yes | sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+
+
+# Configure containerd
+sudo su <<EOF
+cat > /etc/containerd/config.toml <<EOFF
+[plugins."io.containerd.grpc.v1.cri"]
+  systemd_cgroup = true
+EOFF
+systemctl restart containerd
+exit
+EOF
+
+sudo modprobe br_netfilter
+sudo echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables
+sudo echo 1 > /proc/sys/net/ipv4/ip_forward
+
+yes | sudo kubeadm reset 
+
+sudo usermod -aG docker $USER && newgrp docker
+
 
 #"""""""""""""""""""""""""""""""""""""""""""""" install kind """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # Determine the architecture
@@ -80,48 +100,104 @@ chmod +x ./kind
 
 # Move the binary to /usr/local/bin
 sudo mv ./kind /usr/local/bin/kind
+#-----------------------------
+#5 export other component images: 
+# pause,kube-apiserver,kube-controller-manager,kube-scheduler,kube-proxy,etcd,coredns
+docker pull --platform=linux/amd64 registry.k8s.io/pause:3.9
+sudo -i
+docker save registry.k8s.io/pause:3.9 > /root/k8s/k8s-images/pause.tar
+exit
 
-echo "kind binary installed successfully."
+docker pull --platform=linux/amd64 registry.k8s.io/kube-apiserver:v1.29.10
+sudo -i
+docker save registry.k8s.io/kube-apiserver:v1.29.10 > /root/k8s/k8s-images/kube-apiserver.tar
+exit
 
-#"""""""""""""""""""""""""""""""""""""""""""""" install UERANSIM """""""""""""""""""""""""""""""""""""""""""""""""""""
-# Cloner le dépôt UERANSIM depuis GitHub
-git clone https://github.com/aligungr/UERANSIM
+docker pull --platform=linux/amd64 registry.k8s.io/kube-controller-manager:v1.29.10
+sudo -i
+docker save registry.k8s.io/kube-controller-manager:v1.29.10 > /root/k8s/k8s-images/kube-controller-manager.tar
+exit
 
-# Déplacer le contenu cloné dans le dossier spécifié
-mv UERANSIM RAN
+docker pull --platform=linux/amd64 registry.k8s.io/kube-scheduler:v1.29.10
+sudo -i
+docker save registry.k8s.io/kube-scheduler:v1.29.10 > /root/k8s/k8s-images/kube-scheduler.tar
+exit
+
+docker pull --platform=linux/amd64 registry.k8s.io/kube-proxy:v1.29.10
+sudo -i
+docker save registry.k8s.io/kube-proxy:v1.29.10 > /root/k8s/k8s-images/kube-proxy.tar
+exit
+
+docker pull --platform=linux/amd64 registry.k8s.io/etcd:3.5.9-0
+sudo -i
+docker save registry.k8s.io/etcd:3.5.9-0 > /root/k8s/k8s-images/etcd.tar
+exit
+
+docker pull --platform=linux/amd64 registry.k8s.io/coredns/coredns:v1.10.1
+sudo -i
+docker save registry.k8s.io/coredns/coredns:v1.10.1 > /root/k8s/k8s-images/coredns.tar
+exit
+
+
+#6 download kube-flannel.yml
+sudo -i
+wget -P /root/k8s/k8s-flannel https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+exit
+#7 export images that flannel depends on
+cat kube-flannel.yml | grep image
+      image: docker.io/flannel/flannel-cni-plugin:v1.2.0
+      image: docker.io/flannel/flannel:v0.22.2
+      image: docker.io/flannel/flannel:v0.22.2
+sudo -i
+docker pull --platform=linux/amd64 docker.io/flannel/flannel:v0.22.2
+docker save docker.io/flannel/flannel:v0.22.2 > /root/k8s/k8s-flannel/flannel.tar
+
+docker pull --platform=linux/amd64 docker.io/flannel/flannel-cni-plugin:v1.2.0
+docker save docker.io/flannel/flannel-cni-plugin:v1.2.0 > /root/k8s/k8s-flannel/flannel-cni-plugin.tar
+
+#8 download cri-dockerd,v0.3.4
+wget -P /root/k8s/k8s-cri-dockerd https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.4/cri-dockerd-0.3.4-3.el7.x86_64.rpm
+exit
+# tar k8s components
+tar -zcvf k8s.tar.gz k8s
+
+# cp k8s.tar.gz to host
+docker cp centos:/root/k8s.tar.gz downloads
+
+
+sudo -i
+docker pull --platform=linux/amd64  registry.k8s.io/kube-apiserver:v1.29.10
+docker save registry.k8s.io/kube-apiserver:v1.29.10 > /root/k8s/k8s-images/kube-apiserver.tar
+
+docker pull --platform=linux/amd64  registry.k8s.io/kube-controller-manager:v1.29.10
+docker save registry.k8s.io/coredns/registry.k8s.io/kube-controller-manager:v1.29.10 > /root/k8s/k8s-images/kube-controller-manager.tar
+
+docker pull --platform=linux/amd64  registry.k8s.io/kube-scheduler:v1.29.10
+docker save registry.k8s.io/kube-scheduler:v1.29.10 > /root/k8s/k8s-images/kube-scheduler.tar
+
+docker pull --platform=linux/amd64  registry.k8s.io/kube-proxy:v1.29.10
+docker save rregistry.k8s.io/kube-proxy:v1.29.10 > /root/k8s/k8s-images/kube-proxy.tar
+
+docker pull --platform=linux/amd64  registry.k8s.io/coredns/coredns:v1.11.1
+docker save registry.k8s.io/coredns/coredns:v1.11.1> /root/k8s/k8s-images/coredns.tar
+
+docker pull --platform=linux/amd64  registry.k8s.io/pause:3.9
+docker save registry.k8s.io/pause:3.9 > /root/k8s/k8s-images/pause.tar
+
+docker pull --platform=linux/amd64  registry.k8s.io/etcd:3.5.15-0
+docker save registry.k8s.io/etcd:3.5.15-0 > /root/k8s/k8s-images/etcd.tar
+
+exit
 
 
 
-#Then here's the list of dependencies: (Built-in dependencies shipped with Ubuntu are not listed herein.)
+sudo docker pull registry.k8s.io/kube-apiserver:v1.29.10
+sudo docker pull registry.k8s.io/kube-controller-manager:v1.29.10
+sudo docker pull registry.k8s.io/kube-scheduler:v1.29.10
+sudo docker pull registry.k8s.io/kube-proxy:v1.29.10
+sudo docker pull registry.k8s.io/coredns/coredns:v1.11.1
+sudo docker pull registry.k8s.io/pause:3.9
+sudo docker pull registry.k8s.io/etcd:3.5.15-0
 
-yes | sudo apt update
-sudo apt install make
-sudo apt install gcc
-sudo apt install g++
-sudo apt install libsctp-dev lksctp-tools
-sudo apt install iproute2
-sudo apt remove cmake -y
-sudo snap install cmake --classic
 
-# Aller dans le dossier cloné
-cd RAN/UERANSIM
-make
-cd .. 
-cd ..
-#"""""""""""""""""""""""""""""""""""""""""""""" install Helm """""""""""""""""""""""""""""""""""""""""""""""""""""
-curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-chmod 700 get_helm.sh
-./get_helm.sh
-helm plugin install https://github.com/ThalesGroup/helm-spray
-#""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-# Clone multus GitHub repository
-git clone https://github.com/k8snetworkplumbingwg/multus-cni.git
-# Disable swap
-sudo swapoff -a
-# install net-tools, the collection of base networking utilities for Linux
-sudo apt-get install net-tools
-# Reset Kubernetes (if already initialized)
-yes | sudo kubeadm reset 
-# Add current user to docker group
-sudo usermod -aG docker $USER && newgrp docker
-
+sudo kubeadm init --kubernetes-version=v1.29.10 --apiserver-advertise-address=192.168.1.20 --pod-network-cidr=10.10.0.0/16 --cri-socket=unix:///var/run/cri-dockerd.sock
