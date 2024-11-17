@@ -18,13 +18,13 @@ spec:
       volumeMounts:
         - name: shared-volume
           mountPath: /data
-    - name: volume_container
+    - name: volume-container
       image: volume_container:latest
       imagePullPolicy: Never
       resources:
         limits:
           memory: 500Mi
-          cpu: 2
+          cpu: 400m
         requests:
           memory: 300Mi
           cpu: 400m
