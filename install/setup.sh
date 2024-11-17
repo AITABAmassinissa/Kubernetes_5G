@@ -1,3 +1,7 @@
+# Met à jour la liste des paquets
+sudo apt update -y
+# Installation de Vim
+sudo apt install vim -y
 #"""""""""""""""""""""""""""""""""""""""""""""" install docker """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 sudo apt-get update
 sudo apt-get install ca-certificates curl
@@ -49,9 +53,10 @@ sudo echo 1 > /proc/sys/net/ipv4/ip_forward
 yes | sudo kubeadm reset 
 
 #"""""""""""""""""""""""""""""""""""""""""""""" create images """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-docker build -t python_container first_container
-docker build -t python_container2 first_container2
-docker build -t volume_container second_container
+docker pull python:3.9
+docker build -t tp1 first_container
+docker build -t tp2 first_container2
+docker build -t tp3 second_container
 docker rmi -f $(docker images -q)
 #"""""""""""""""""""""""""""""""""""""""""""""" install kind """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # Determine the architecture
@@ -75,7 +80,6 @@ chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
 #"""""""""""""""""""""""""""""""""""""""""""""" create kind cluster""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 kind create cluster --name firstcluster --config kind-config.yaml
-kind delete cluster --name firstcluster
 #"""""""""""""""""""""""""""""""""""""""""""""" Grafana """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # Setup Prometheus Monitoring
 
@@ -116,3 +120,5 @@ kubectl create -f monitoring/deployment.yaml
 
 # Création du service :
 kubectl create -f monitoring/service.yaml
+#"""""""""""""""""""""""""""""""""""""""""""""" remove kind cluster""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+kind delete cluster --name firstcluster
