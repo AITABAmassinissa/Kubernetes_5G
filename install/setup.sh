@@ -110,7 +110,7 @@ docker build -t tp2 first_container2
 echo "docker build -t tp3 second_container"
 docker build -t tp3 second_container
 
-echo "docker rmi -f \$(docker images -q)"
+#echo "docker rmi -f \$(docker images -q)"
 #docker rmi -f $(docker images -q)
 
 # """""""""""""""""""""""""""""""""""""""""""""" install kind """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
