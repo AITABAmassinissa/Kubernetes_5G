@@ -48,6 +48,3 @@ kubectl create -f monitoring/deployment.yaml
 
 # Création du service :
 kubectl create -f monitoring/service.yaml
-# """""""""""""""""""""""""""""""""""""""""""""" delete kind cluster""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-echo "kind create cluster --name firstcluster --config kind-config.yaml"
-kind delete cluster --name firstcluster

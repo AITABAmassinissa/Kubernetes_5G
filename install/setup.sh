@@ -111,7 +111,7 @@ echo "docker build -t tp3 second_container"
 docker build -t tp3 second_container
 
 echo "docker rmi -f \$(docker images -q)"
-docker rmi -f $(docker images -q)
+#docker rmi -f $(docker images -q)
 
 # """""""""""""""""""""""""""""""""""""""""""""" install kind """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # Déterminer l'architecture
@@ -177,5 +177,6 @@ kubectl create -f monitoring/deployment.yaml
 # Création du service :
 kubectl create -f monitoring/service.yaml
 # """""""""""""""""""""""""""""""""""""""""""""" delete kind cluster""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+sleep 300
 echo "kind create cluster --name firstcluster --config kind-config.yaml"
 kind delete cluster --name firstcluster
