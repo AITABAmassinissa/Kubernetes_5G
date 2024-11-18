@@ -13,8 +13,8 @@ kind create cluster --name firstcluster --config kind-config.yaml
 # """""""""""""""""""""""""""""""""""""""""""""" Grafana """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 echo "kind load docker-image k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0"
 kind load docker-image k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0 --name "$CLUSTER_NAME"
-echo "kind load docker-image image: prom/prometheu"
-kind load docker-image image: prom/prometheus --name "$CLUSTER_NAME"
+echo "kind load docker-image image: prom/prometheu:latest"
+kind load docker-image image: prom/prometheus:latest --name "$CLUSTER_NAME"
 echo "kind load docker-image image: grafana/grafana:latest"
 kind load docker-image image: grafana/grafana:latest --name "$CLUSTER_NAME"
 # Création d'un namespace nommé "monitoring".
