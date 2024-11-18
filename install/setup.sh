@@ -154,14 +154,14 @@ echo "Cluster détecté : $CLUSTER_NAME"
 # Charger l'image Docker dans le cluster détecté
 echo "docker pull k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0"
 docker pull k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0
-echo "docker pull image: prom/prometheus"
-docker pull image: prom/prometheus
+echo "docker pull image: prom/prometheus:latest"
+docker pull image: prom/prometheus:latest
 echo "docker pull image: grafana/grafana:latest"
 docker pull image: grafana/grafana:latest
 
 echo "kind load docker-image k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0"
 kind load docker-image k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0 --name "$CLUSTER_NAME"
-echo "kind load docker-image image: prom/prometheu"
+echo "kind load docker-image image: prom/prometheus:latest"
 kind load docker-image image: prom/prometheus --name "$CLUSTER_NAME"
 echo "kind load docker-image image: grafana/grafana:latest"
 kind load docker-image image: grafana/grafana:latest --name "$CLUSTER_NAME"
