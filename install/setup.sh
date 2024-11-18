@@ -138,7 +138,6 @@ sudo mv ./kind /usr/local/bin/kind
 # """""""""""""""""""""""""""""""""""""""""""""" create kind cluster""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 echo "kind create cluster --name firstcluster --config kind-config.yaml"
 kind create cluster --name firstcluster --config kind-config.yaml
-
 # """""""""""""""""""""""""""""""""""""""""""""" Grafana """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # Création d'un namespace nommé "monitoring".
 kubectl create namespace monitoring
@@ -177,3 +176,6 @@ kubectl create -f monitoring/deployment.yaml
 
 # Création du service :
 kubectl create -f monitoring/service.yaml
+# """""""""""""""""""""""""""""""""""""""""""""" delete kind cluster""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+echo "kind create cluster --name firstcluster --config kind-config.yaml"
+kind delete cluster --name firstcluster
