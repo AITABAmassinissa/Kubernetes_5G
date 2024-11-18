@@ -139,6 +139,34 @@ sudo mv ./kind /usr/local/bin/kind
 echo "kind create cluster --name firstcluster --config kind-config.yaml"
 kind create cluster --name firstcluster --config kind-config.yaml
 # """""""""""""""""""""""""""""""""""""""""""""" Grafana """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
+#!/bin/bash
+
+# Obtenir le premier cluster disponible
+CLUSTER_NAME=$(kind get clusters | head -n 1)
+
+if [ -z "$CLUSTER_NAME" ]; then
+  echo "Aucun cluster Kind trouvé. Assurez-vous qu'un cluster est actif."
+  exit 1
+fi
+
+echo "Cluster détecté : $CLUSTER_NAME"
+
+# Charger l'image Docker dans le cluster détecté
+echo "docker pull k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0"
+docker pull k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0
+echo "docker pull image: prom/prometheus"
+docker pull image: prom/prometheus
+echo "docker pull image: grafana/grafana:latest"
+docker pull image: grafana/grafana:latest
+
+echo "kind load docker-image k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0"
+kind load docker-image k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0 --name "$CLUSTER_NAME"
+echo "kind load docker-image image: prom/prometheu"
+kind load docker-image image: prom/prometheus --name "$CLUSTER_NAME"
+echo "kind load docker-image image: grafana/grafana:latest"
+kind load docker-image image: grafana/grafana:latest --name "$CLUSTER_NAME"
+
+
 # Création d'un namespace nommé "monitoring".
 kubectl create namespace monitoring
 
