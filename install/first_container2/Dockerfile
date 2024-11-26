@@ -8,7 +8,7 @@ COPY first_container.py /app/
 WORKDIR /app
 
 # Installation de numpy en fonction du jour de naissance de l'etudiant, pair 1.26, 1.25 sinon
-RUN pip install numpy==1.25
+RUN pip install numpy==1.26
 
 # Execution du script Python
 CMD ["python", "-u", "first_container.py"] 

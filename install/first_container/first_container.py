@@ -13,7 +13,7 @@ print("Version de numpy:", np.__version__)
 #ajoutez votre touche, exemple : print("...")
 #
 
-sleep(10000)
+#sleep(10000)
 
 """
 
