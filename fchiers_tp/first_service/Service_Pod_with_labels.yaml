@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-service
+  namespace: tp
+  labels:
+    app: my_app_to_test_volume
+spec:
+  selector:
+    app: my_app_to_test_volume
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP

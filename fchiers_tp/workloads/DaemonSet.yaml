@@ -1,0 +1,35 @@
+apiVersion: apps/v1  # Spécifie la version de l'API pour les objets DaemonSet.
+kind: DaemonSet  # Indique que cette ressource est un DaemonSet.
+metadata:
+  name: python-pod-daemonset  # Nom unique pour identifier ce DaemonSet.
+  namespace: tp  # Namespace dans lequel le DaemonSet sera créé.
+spec:
+  selector:  # Critères pour sélectionner les Pods gérés par ce DaemonSet.
+    matchLabels:
+      app: python-pod  # Label utilisé pour associer les Pods au DaemonSet.
+  template:  # Modèle utilisé pour créer les Pods.
+    metadata:
+      labels:
+        app: python-pod  # Label appliqué aux Pods créés par ce DaemonSet.
+    spec:
+      containers:  # Liste des conteneurs à exécuter dans chaque Pod.
+        - name: python-container  # Nom du premier conteneur.
+          image: python_container:latest  # Image Docker utilisée pour ce conteneur.
+          imagePullPolicy: Never  # Ne jamais récupérer l'image, utiliser l'image locale.
+          resources:
+            limits:  # Ressources maximales allouées pour ce conteneur.
+              memory: 600Mi  
+              cpu: 1  
+            requests: # Ressources minimales garanties pour ce conteneur.
+              memory: 400Mi  
+              cpu: 200m 
+        - name: volume-container  
+          image: volume_container:latest  
+          imagePullPolicy: Never 
+          resources:
+            limits:  
+              memory: 500Mi  
+              cpu: 400m  
+            requests:  
+              memory: 300Mi  
+              cpu: 400m  
