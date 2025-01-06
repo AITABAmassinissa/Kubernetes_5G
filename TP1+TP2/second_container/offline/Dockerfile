@@ -2,7 +2,7 @@
 FROM python-with-numpy:1.26
 
 # Copie du script Python dans le conteneur
-COPY first_container.py /app/
+COPY second_container.py /app/
 
 # Definition du repertoire de travail
 WORKDIR /app
