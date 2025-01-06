@@ -7,8 +7,14 @@ COPY first_container.py /app/
 # Definition du repertoire de travail
 WORKDIR /app
 
+#### mode en ligne 
 # Installation de numpy en fonction du jour de naissance de l'etudiant, pair 1.26, 1.25 sinon
 RUN pip install numpy==1.25
+
+### mode horsligne
+#pip download -d ./packages -r requirements.txt
+#RUN pip install --no-index --find-links=./packages -r requirements.txt
+
 
 # Execution du script Python
 CMD ["python", "-u", "first_container.py"] 
