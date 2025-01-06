@@ -110,6 +110,8 @@ docker build -t tp2 first_container2
 echo "docker build -t tp3 second_container"
 docker build -t tp3 second_container
 
+docker build -t python-with-numpy:1.25 python-with-numpy:1.25
+docker build -t python-with-numpy:1.26 python-with-numpy:1.26
 #echo "docker rmi -f \$(docker images -q)"
 #docker rmi -f $(docker images -q)
 
