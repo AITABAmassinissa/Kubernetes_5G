@@ -1,8 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: python-pod-configMap
-  namespace: tp
+  name: pod-without-labels
 spec:
   containers:
     - name: python-container
@@ -15,10 +14,7 @@ spec:
         requests:
           memory: 400Mi
           cpu: 200m
-      envFrom:
-        - configMapRef:
-            name: python-config  # Référence au ConfigMap
-    - name: volume-container
+    - name: volume-container 
       image: volume_container:latest
       imagePullPolicy: Never
       resources:

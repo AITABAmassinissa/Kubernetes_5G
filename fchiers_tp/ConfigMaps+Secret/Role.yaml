@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: tp
+  name: secret-reader-role  # Nom du rôle
+rules:
+  - apiGroups: [""]  # API group vide pour les ressources de base comme Secret et ConfigMap
+    resources:
+      - secrets       # Permet d'accéder aux Secrets
+      - configmaps    # Permet d'accéder aux ConfigMaps
+    resourceNames:
+      - python-secret # Limite l'accès uniquement à ce Secret
+      - python-config # Limite l'accès uniquement à ce ConfigMap
+    verbs:
+      - get           # Permet de lire les ressources

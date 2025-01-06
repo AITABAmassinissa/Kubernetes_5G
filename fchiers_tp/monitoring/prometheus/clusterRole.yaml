@@ -1,0 +1,36 @@
+# Définition d'un ClusterRole pour Prometheus
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus  # Nom du ClusterRole pour identification
+rules:
+- apiGroups: [""]  # Groupe API vide pour les ressources de base Kubernetes
+  resources:
+  - nodes          # Accès aux informations sur les nœuds
+  - nodes/proxy    # Accès au proxy des nœuds
+  - services       # Accès aux services
+  - endpoints      # Accès aux endpoints des services
+  - pods           # Accès aux pods
+  verbs: ["get", "list", "watch"]  # Opérations autorisées : lecture et observation
+- apiGroups:
+  - extensions     # Groupe API pour les extensions Kubernetes
+  resources:
+  - ingresses      # Accès aux objets ingress
+  verbs: ["get", "list", "watch"]  # Opérations autorisées : lecture et observation
+- nonResourceURLs: ["/metrics"]  # Accès aux métriques exposées par le cluster
+  verbs: ["get"]  # Autorisation de lecture
+
+---
+# Définition d'un ClusterRoleBinding pour lier le ClusterRole à un ServiceAccount
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus  # Nom du ClusterRoleBinding pour identification
+roleRef:
+  apiGroup: rbac.authorization.k8s.io  # Référence au groupe API RBAC
+  kind: ClusterRole  # Type de rôle à lier
+  name: prometheus  # Nom du ClusterRole à lier
+subjects:
+- kind: ServiceAccount  # Type de sujet lié au rôle
+  name: default         # Nom du ServiceAccount utilisé par Prometheus
+  namespace: monitoring # Namespace où se trouve le ServiceAccount
