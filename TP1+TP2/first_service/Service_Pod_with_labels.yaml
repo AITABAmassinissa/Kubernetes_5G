@@ -4,10 +4,10 @@ metadata:
   name: python-service
   namespace: tp
   labels:
-    app: my_app_to_test_volume
+    app: my-app-to-test-services
 spec:
   selector:
-    app: my_app_to_test_volume
+    app: my-app-to-test-services
   ports:
     - protocol: TCP
       port: 80

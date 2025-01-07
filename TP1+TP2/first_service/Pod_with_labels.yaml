@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: python-pod-no-volume
+  name: pod-with-labels
   namespace: tp
   labels:
-    app: my_app_to_test_volume
+    app: my-app-to-test-services
     tier: frontend
     env: production
 spec:

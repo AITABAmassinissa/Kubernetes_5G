@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: python-pod-configMap
+  name: configmap-pod
   namespace: tp
 spec:
   containers:
