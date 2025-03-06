@@ -1,31 +1,31 @@
 # """""""""""""""""""""""""""""""""""""""""""""" install Kubernetes """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-echo "sudo apt-get update"
+echo "******** sudo apt-get update"
 sudo apt-get update
 
-echo "sudo apt-get install -y apt-transport-https ca-certificates curl gpg"
+echo "******** sudo apt-get install -y apt-transport-https ca-certificates curl gpg"
 sudo apt-get install -y apt-transport-https ca-certificates curl gpg
 
-echo "curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+echo "******** curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg"
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
-echo "Ajout du dépôt Kubernetes"
+echo "******** Ajout du dépôt Kubernetes"
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
-echo "sudo apt-get update"
+echo "******** sudo apt-get update"
 sudo apt-get update
 
-echo "sudo apt-get install -y kubelet kubeadm kubectl"
+echo "******** sudo apt-get install -y kubelet kubeadm kubectl"
 sudo apt-get install -y kubelet kubeadm kubectl
 
-echo "sudo apt-mark hold kubelet kubeadm kubectl"
+echo "******** sudo apt-mark hold kubelet kubeadm kubectl"
 sudo apt-mark hold kubelet kubeadm kubectl
 
 # Désactiver swap
-echo "sudo swapoff -a"
+echo "******** sudo swapoff -a"
 sudo swapoff -a
 
 # Configurer containerd
-echo "sudo su <<EOF"
+echo "******** sudo su <<EOF"
 sudo su <<EOF
 cat > /etc/containerd/config.toml <<EOFF
 [plugins."io.containerd.grpc.v1.cri"]
@@ -35,60 +35,60 @@ systemctl restart containerd
 exit
 EOF
 
-echo "sudo modprobe br_netfilter"
+echo "******** sudo modprobe br_netfilter"
 sudo modprobe br_netfilter
 
-echo "sudo echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables"
+echo "******** sudo echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables"
 sudo echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables
 
-echo "sudo echo 1 > /proc/sys/net/ipv4/ip_forward"
+echo "******** sudo echo 1 > /proc/sys/net/ipv4/ip_forward"
 sudo echo 1 > /proc/sys/net/ipv4/ip_forward
 
-echo "yes | sudo kubeadm reset"
+echo "******** yes | sudo kubeadm reset"
 yes | sudo kubeadm reset
 
 # """""""""""""""""""""""""""""""""""""""""""""" create images """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-echo "docker pull python:3.9"
+echo "******** docker pull python:3.9"
 docker pull python:3.9
 
-echo "docker build -t tp1 first_container"
+echo "******** docker build -t tp1 first_container"
 docker build -t tp1 first_container
 
-echo "docker build -t tp2 first_container2"
+echo "******** docker build -t tp2 first_container2"
 docker build -t tp2 first_container2
 
-echo "docker build -t tp3 second_container"
+echo "******** docker build -t tp3 second_container"
 docker build -t tp3 second_container
 
 docker build -t python-with-numpy:1.25 python-with-numpy:1.25
 docker build -t python-with-numpy:1.26 python-with-numpy:1.26
-#echo "docker rmi -f \$(docker images -q)"
+#echo "******** docker rmi -f \$(docker images -q)"
 #docker rmi -f $(docker images -q)
 
 # """""""""""""""""""""""""""""""""""""""""""""" install kind """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # Déterminer l'architecture
-echo "ARCH=\$(uname -m)"
+echo "******** ARCH=\$(uname -m)"
 ARCH=$(uname -m)
 
 if [ "$ARCH" = "x86_64" ]; then
-    echo "curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.22.0/kind-linux-amd64"
+    echo "******** curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.22.0/kind-linux-amd64"
     curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.22.0/kind-linux-amd64
 elif [ "$ARCH" = "aarch64" ]; then
-    echo "curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.22.0/kind-linux-arm64"
+    echo "******** curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.22.0/kind-linux-arm64"
     curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.22.0/kind-linux-arm64
 else
-    echo "Unsupported architecture: $ARCH"
+    echo "******** Unsupported architecture: $ARCH"
     exit 1
 fi
 
-echo "chmod +x ./kind"
+echo "******** chmod +x ./kind"
 chmod +x ./kind
 
-echo "sudo mv ./kind /usr/local/bin/kind"
+echo "******** sudo mv ./kind /usr/local/bin/kind"
 sudo mv ./kind /usr/local/bin/kind
 
 # """""""""""""""""""""""""""""""""""""""""""""" create kind cluster""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-echo "kind create cluster --name firstcluster --config kind-config.yaml"
+echo "******** kind create cluster --name firstcluster --config kind-config.yaml"
 kind create cluster --name firstcluster --config kind-config.yaml
 # """""""""""""""""""""""""""""""""""""""""""""" Grafana """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 #!/bin/bash
@@ -97,25 +97,25 @@ kind create cluster --name firstcluster --config kind-config.yaml
 CLUSTER_NAME=$(kind get clusters | head -n 1)
 
 if [ -z "$CLUSTER_NAME" ]; then
-  echo "Aucun cluster Kind trouvé. Assurez-vous qu'un cluster est actif."
+  echo "******** Aucun cluster Kind trouvé. Assurez-vous qu'un cluster est actif."
   exit 1
 fi
 
-echo "Cluster détecté : $CLUSTER_NAME"
+echo "******** Cluster détecté : $CLUSTER_NAME"
 
 # Charger l'image Docker dans le cluster détecté
-echo "docker pull k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0"
+echo "******** docker pull k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0"
 docker pull k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0
-echo "docker pull prom/prometheus:latest"
+echo "******** docker pull prom/prometheus:latest"
 docker pull prom/prometheus:latest
-echo "docker pull grafana/grafana:latest"
+echo "******** docker pull grafana/grafana:latest"
 docker pull grafana/grafana:latest
 
-echo "kind load docker-image k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0"
+echo "******** kind load docker-image k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0"
 kind load docker-image k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.3.0 --name "$CLUSTER_NAME"
-echo "kind load docker-image prom/prometheus:latest"
+echo "******** kind load docker-image prom/prometheus:latest"
 kind load docker-image prom/prometheus --name "$CLUSTER_NAME"
-echo "kind load docker-image grafana/grafana:latest"
+echo "******** kind load docker-image grafana/grafana:latest"
 kind load docker-image grafana/grafana:latest --name "$CLUSTER_NAME"
 
 
@@ -158,5 +158,5 @@ kubectl create -f monitoring/deployment.yaml
 kubectl create -f monitoring/service.yaml
 # """""""""""""""""""""""""""""""""""""""""""""" delete kind cluster""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 sleep 300
-echo "kind create cluster --name firstcluster --config kind-config.yaml"
+echo "******** kind create cluster --name firstcluster --config kind-config.yaml"
 kind delete cluster --name firstcluster
