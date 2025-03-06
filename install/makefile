@@ -1,6 +1,8 @@
-all : docker
+all : install
 
 
-docker:
-	sudo usermod -aG docker $(USER) && sg docker true
-	sed -n '44,$$p' setup.sh | bash
+install:
+	chmod +x setup1.sh
+	./setup1.sh
+	chmod +x setup2.sh
+	./setup2.sh
