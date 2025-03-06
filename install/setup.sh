@@ -39,14 +39,7 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plug
 #echo "sudo usermod -aG docker \$USER && newgrp docker"
 #sudo usermod -aG docker $USER && newgrp docker
 
-if [ "$1" != "--post-newgrp" ]; then
-  echo "Ajout de l'utilisateur actuel au groupe Docker et bascule vers le nouveau groupe"
-  sudo usermod -aG docker $USER
-  exec newgrp docker <<EONG
-$0 --post-newgrp
-EONG
-  exit 0
-fi
+make
 
 # """""""""""""""""""""""""""""""""""""""""""""" install Kubernetes """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 echo "sudo apt-get update"

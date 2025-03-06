@@ -1,4 +1,0 @@
-docker build -t python_container .
-docker tag python_container:latest maitaba/python_container
-docker push maitaba/my-schedulerpy
-kind load docker-image python_container:latest --name k8s-playground

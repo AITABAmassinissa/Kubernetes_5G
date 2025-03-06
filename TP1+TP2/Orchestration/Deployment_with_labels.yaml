@@ -10,7 +10,7 @@ spec:
     metadata:
       labels:
         app: python-pod  # Label appliqué aux Pods créés par ce Deployment.
-        dev: prod  # Nouveau label ajouté.
+        env: prod  # Nouveau label ajouté.
     spec:
       containers:  # Liste des conteneurs à exécuter dans chaque Pod.
         - name: python-container  # Nom du premier conteneur.
