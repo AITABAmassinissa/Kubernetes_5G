@@ -39,8 +39,7 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plug
 #echo "sudo usermod -aG docker \$USER && newgrp docker"
 #sudo usermod -aG docker $USER && newgrp docker
 
-make
-
+make 
 # """""""""""""""""""""""""""""""""""""""""""""" install Kubernetes """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 echo "sudo apt-get update"
 sudo apt-get update
