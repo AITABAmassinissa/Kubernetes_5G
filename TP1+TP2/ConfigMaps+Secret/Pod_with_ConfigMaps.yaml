@@ -6,7 +6,7 @@ metadata:
 spec:
   containers:
     - name: python-container
-      image: python_container:latest
+      image: python_container:v2.0
       imagePullPolicy: Never
       resources:
         limits:
@@ -19,7 +19,7 @@ spec:
         - configMapRef:
             name: python-config  # Référence au ConfigMap
     - name: volume-container
-      image: volume_container:latest
+      image: volume_container:v1.0
       imagePullPolicy: Never
       resources:
         limits:

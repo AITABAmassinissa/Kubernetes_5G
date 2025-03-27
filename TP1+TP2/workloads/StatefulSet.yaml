@@ -15,7 +15,7 @@ spec:
     spec:
       containers:  # Liste des conteneurs à exécuter dans chaque Pod.
         - name: python-container  # Nom du premier conteneur.
-          image: python_container:latest  # Image Docker utilisée pour ce conteneur.
+          image: python_container:v2.0  # Image Docker utilisée pour ce conteneur.
           imagePullPolicy: Never  # Ne jamais récupérer l'image, utiliser l'image locale.
           resources:
             limits:  # Ressources maximales allouées pour ce conteneur.
@@ -25,7 +25,7 @@ spec:
               memory: 400Mi  # Mémoire minimale demandée.
               cpu: 200m  # CPU minimale demandée (200 milli-cores).
         - name: volume-container 
-          image: volume_container:latest  
+          image: volume_container:v1.0
           imagePullPolicy: Never  
           resources:
             limits:  
